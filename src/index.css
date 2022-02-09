@@ -3,7 +3,7 @@
     --body-background-color: #191919;
     --header-background-color: #2d4263;
     --item-background-color: #202124;
-    --text-color: #eeeeee;
+    --font-color: #eeeeee;
   }
 }
 
@@ -20,7 +20,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--body-background-color);
-  color: var(--text-color);
+  color: var(--font-color);
 }
 
 .app-header {
@@ -65,7 +65,7 @@ h2 {
 
 a {
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--font-color);
 }
 
 .domain {
@@ -77,6 +77,7 @@ a {
   flex-direction: row;
   justify-content: space-between;
   padding-top: 4px;
+  max-width: 400px;
 }
 
 .app {
