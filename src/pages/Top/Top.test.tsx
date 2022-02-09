@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
 import { Item } from '../../core/models/Item';
 import Top from './Top';
@@ -59,9 +59,7 @@ describe('Top', () => {
     const { container } = render(<Top />);
 
     // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      expect(container).toBeDefined();
-    });
+    await act(async () => expect(container).toBeDefined());
   });
 
   test('should render items', async () => {
@@ -71,5 +69,71 @@ describe('Top', () => {
 
     const items = await screen.findAllByTitle('item');
     expect(items).toHaveLength(3);
+  });
+
+  test('should render pagination buttons', async () => {
+    mockedAxios.get.mockResolvedValue(mockedResponse);
+
+    render(<Top />);
+
+    const buttons = await screen.findAllByRole('button');
+    expect(buttons).toHaveLength(2);
+  });
+
+  test('should render next page', async () => {
+    mockedAxios.get.mockResolvedValue(mockedResponse);
+
+    render(<Top />);
+
+    const nextButton = screen.getByText('Next');
+    fireEvent.click(nextButton);
+
+    const items = await screen.findAllByTitle('item');
+    expect(items).toHaveLength(3);
+  });
+
+  test('should disable Next button if current page is 10', async () => {
+    mockedAxios.get.mockResolvedValue(mockedResponse);
+
+    render(<Top />);
+
+    const nextButton = screen.getByText('Next');
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+
+    await act(async () => {
+      const disabledButton = await screen.findByText('Next', { selector: 'button[disabled]' });
+      expect(disabledButton).toBeDefined();
+    });
+  });
+
+  test('should render previous page', async () => {
+    mockedAxios.get.mockResolvedValue(mockedResponse);
+
+    render(<Top />);
+
+    const nextButton = screen.getByText('Previous');
+    fireEvent.click(nextButton);
+
+    const items = await screen.findAllByTitle('item');
+    expect(items).toHaveLength(3);
+  });
+
+  test('should disable Previous button if current page is 1', async () => {
+    mockedAxios.get.mockResolvedValue(mockedResponse);
+
+    render(<Top />);
+
+    await act(async () => {
+      const disabledButton = await screen.findByText('Previous', { selector: 'button[disabled]' });
+      expect(disabledButton).toBeDefined();
+    });
   });
 });
