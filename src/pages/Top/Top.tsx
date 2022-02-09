@@ -1,24 +1,17 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ItemComponent from '../../components/ItemComponent';
-import { API_VERSION, BASE_URL } from '../../core/api/endpoints';
+import Pagination from '../../components/Pagination';
+import { useFetch } from '../../core/hooks/useFetch';
 import { Item } from '../../core/models/Item';
 
 const maxPages = 10;
 
 const Top = () => {
-  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const type = 'news';
+  const { items, fetchData } = useFetch('news');
 
   useEffect(() => {
-    const fetchData = async () => {
-      const endpoint = `${BASE_URL}/${API_VERSION}/${type}/${page}.json`;
-      const response = await axios.get(endpoint);
-
-      setItems(response.data);
-    };
-    fetchData();
+    fetchData(page);
   }, [page]);
 
   const prevPage = () => (page > 1 ? setPage(page - 1) : 1);
@@ -28,17 +21,7 @@ const Top = () => {
   return (
     <div className="items-container">
       {items && items.map((item: Item) => <ItemComponent item={item} key={item.id} />)}
-      <div className="pagination">
-        <button onClick={prevPage} disabled={page === 1}>
-          Previous
-        </button>
-        <span>
-          {page}/{maxPages}
-        </span>
-        <button onClick={nextPage} disabled={page === maxPages}>
-          Next
-        </button>
-      </div>
+      <Pagination maxPages={maxPages} page={page} prevPage={prevPage} nextPage={nextPage} />
     </div>
   );
 };
