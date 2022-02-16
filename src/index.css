@@ -54,6 +54,11 @@ h2 {
   padding: 12px;
 }
 
+.item-wrapper {
+  width: 100%;
+  border-radius: 10px;
+}
+
 .items-container {
   display: flex;
   flex-direction: column;
@@ -61,10 +66,6 @@ h2 {
   width: 100vw;
 
   margin-top: 60px;
-}
-
-.item-wrapper {
-  width: 100%;
 }
 
 .item {
